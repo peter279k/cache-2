@@ -60,7 +60,7 @@ class FilesystemPool implements CacheInterface
 
                 $item = unserialize($data);
 
-                if ($item instanceof Item) {
+                if ($item instanceof Item && $item->isHit()) {
                     return $item;
                 }
             }

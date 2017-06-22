@@ -24,7 +24,10 @@ class ArrayPool implements CacheInterface
     public function getItem($key)
     {
         if ($this->hasItem($key)) {
-            return $this->data[$key];
+            $item = $this->data[$key];
+            if ($item->isHit()) {
+                return $item;
+            }
         }
 
         # If we didn't find a suitable item then create a new one now

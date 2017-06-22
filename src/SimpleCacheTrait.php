@@ -16,7 +16,10 @@ trait SimpleCacheTrait
     public function get($key, $default = null)
     {
         if ($this->has($key)) {
-            return $this->getItem($key)->get();
+            $item = $this->getItem($key);
+            if ($item->isHit()) {
+                return $item->get();
+            }
         }
 
         return $default;
