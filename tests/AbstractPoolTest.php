@@ -34,6 +34,13 @@ abstract class AbstractPoolTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertNull($this->pool->getItem("episode8")->get());
     }
+    public function testGetItem3()
+    {
+        $episode8 = new Item("episode8", "the last jedi");
+        $episode8->expiresAt(new \DateTime("1 minute ago"));
+        $this->assertTrue($this->pool->save($episode8));
+        $this->assertNull($this->pool->getItem("episode8")->get());
+    }
 
 
     public function testGetItems()
@@ -145,10 +152,20 @@ abstract class AbstractPoolTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testSet()
+    public function testSet1()
     {
         $this->assertTrue($this->pool->set("luke", "skywalker"));
         $this->assertSame("skywalker", $this->pool->get("luke"));
+    }
+    public function testSet2()
+    {
+        $this->assertTrue($this->pool->set("luke", "skywalker", 1));
+        $this->assertSame("skywalker", $this->pool->get("luke"));
+    }
+    public function testSet3()
+    {
+        $this->assertTrue($this->pool->set("luke", "skywalker", -1));
+        $this->assertNull($this->pool->get("luke"));
     }
 
 

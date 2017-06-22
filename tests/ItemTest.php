@@ -67,4 +67,66 @@ class ItemTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($item->isHit());
     }
+
+
+    public function testExpiresAt1()
+    {
+        $item = new Item("test");
+        $item->set("ok");
+        $this->assertTrue($item->isHit());
+
+        $item->expiresAt(new \DateTime("1 second ago"));
+        $this->assertFalse($item->isHit());
+    }
+    public function testExpiresAt2()
+    {
+        $item = new Item("test");
+        $item->set("ok");
+        $this->assertTrue($item->isHit());
+
+        $item->expiresAt(new \DateTime("+1 second"));
+        $this->assertTrue($item->isHit());
+    }
+
+
+    public function testExpiresAfter1()
+    {
+        $item = new Item("test");
+        $item->set("ok");
+        $this->assertTrue($item->isHit());
+
+        $item->expiresAfter(-1);
+        $this->assertFalse($item->isHit());
+    }
+    public function testExpiresAfter2()
+    {
+        $item = new Item("test");
+        $item->set("ok");
+        $this->assertTrue($item->isHit());
+
+        $item->expiresAfter(1);
+        $this->assertTrue($item->isHit());
+    }
+    public function testExpiresAfter3()
+    {
+        $item = new Item("test");
+        $item->set("ok");
+        $this->assertTrue($item->isHit());
+
+        $interval = new \DateInterval("PT1S");
+        $interval->invert = 1;
+        $item->expiresAfter($interval);
+        $this->assertFalse($item->isHit());
+    }
+    public function testExpiresAfter4()
+    {
+        $item = new Item("test");
+        $item->set("ok");
+        $this->assertTrue($item->isHit());
+
+        $item->expiresAfter(new \DateInterval("PT1S"));
+        $this->assertTrue($item->isHit());
+    }
+
+
 }

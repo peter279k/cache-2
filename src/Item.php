@@ -16,6 +16,11 @@ class Item implements CacheItemInterface
      */
     private $value;
 
+    /**
+     * @var int $expiration The unix timestamp the value expires (zero for never expires).
+     */
+    private $expiration = 0;
+
 
     /**
      * Create a new instance.
@@ -61,7 +66,19 @@ class Item implements CacheItemInterface
      */
     public function isHit()
     {
-        return ($this->value !== null);
+        if ($this->value === null) {
+            return false;
+        }
+
+        if (!$this->expiration) {
+            return true;
+        }
+
+        if ($this->expiration < time()) {
+            return false;
+        }
+
+        return true;
     }
 
 
@@ -105,7 +122,11 @@ class Item implements CacheItemInterface
     public function expiresAfter($time)
     {
         if ($time instanceof \DateInterval) {
-            $time = $time->format("%s");
+            $seconds = $time->format("%s");
+            if ($time->invert) {
+                $seconds *= -1;
+            }
+            $time = $seconds;
         }
 
         $this->expiration = time() + $time;

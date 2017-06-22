@@ -31,13 +31,18 @@ trait SimpleCacheTrait
      *
      * @param string $key The key of the item to store
      * @param mixed $value The value of the item to store, must be serializable
-     * @param null $ttl Not used in this implementation
+     * @param int|\DateInterval $ttl The period of time to store the value for
      *
      * @return bool
      */
     public function set($key, $value, $ttl = null)
     {
         $item = new Item($key, $value);
+
+        if ($ttl !== null) {
+            $item->expiresAfter($ttl);
+        }
+
         return $this->save($item);
     }
 
@@ -79,7 +84,7 @@ trait SimpleCacheTrait
      * Persists a set of key => value pairs in the cache.
      *
      * @param iterable $values A list of key => value pairs for a multiple-set operation
-     * @param null $ttl Not used in this implementation
+     * @param int|\DateInterval $ttl The period of time to store the value for
      *
      * @return bool
      */
